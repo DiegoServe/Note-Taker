@@ -14,3 +14,45 @@ const PORT = process.env.PORT || 3001;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+// Static Middleware
+app.use(express.static("./public"));
+
+// API Route and "GET" Request
+app.get("/api/notes", function(req, res) {
+    readFileAsync("db/db.json", "utf8").then(function(data) {
+        notes = [].concat(JSON.parse(data))
+    })
+});
+
+// API Route and "POST" Request
+app.post("/api/notes", function(req, res) {
+    const note =req.body;
+    readFileAsync("db/db.json", "utf-8").then(function(data) {
+        const notes = {}.concat(JSON.parse(data));
+        note.id = notes.length + 1
+        notes.push(note);
+        return notes
+    }).then(function(notes) {
+        writeFileAsync("db/db.json", JSON.stringify(notes))
+        res.json(note);
+    })
+});
+
+// HTML Routes
+app.get("/notes", function(req, res) {
+    res.sendFile(path.join(__dirname, "public/notes.html"));
+});
+
+app.get("/", function(req, res) {
+    res.sendFile(path.join(__dirname, "public/index.html"));
+});
+
+app.get("*", function(req, res) {
+    res.sendFile(path.join(__dirname, "public/index.html"))
+});
+
+// Listening
+app.listen(PORT, function() {
+    console.log("Successfully connected to PORT " + PORT);
+});

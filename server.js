@@ -51,3 +51,8 @@ app.get("/", function(req, res) {
 app.get("*", function(req, res) {
     res.sendFile(path.join(__dirname, "public/index.html"))
 });
+
+// Listening
+app.listen(PORT, function() {
+    console.log("Successfully connected to PORT " + PORT);
+});

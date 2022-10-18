@@ -17,3 +17,10 @@ app.use(express.json());
 
 // Static Middleware
 app.use(express.static("./public"));
+
+// API Route and "GET" Request
+app.get("/api/notes", function(req, res) {
+    readFileAsync("db/db.json", "utf8").then(function(data) {
+        notes = [].concat(JSON.parse(data))
+    })
+});
